@@ -25,7 +25,7 @@ export default {
 
         const obtenerDestinos = async () => {
             try {
-                const res = await axios.get('http://localhost:8000/api/destinos')
+                const res = await axios.get('https://spaintrips-production.up.railway.app/api/destinos')
                 destinos.value = res.data.filter(d =>
                     d.Tipo_experiencia.toLowerCase() === 'vuelo + hotel'
                 )
@@ -41,7 +41,7 @@ export default {
             }
 
             try {
-                await axios.post('http://localhost:8000/api/reservas', {
+                await axios.post('https://spaintrips-production.up.railway.app/api/reservas', {
                     ID_usuario: usuario.value.ID_usuario,
                     ID_destino: idDestino,
                     puntos_usados: puntosUsar.value,
@@ -115,7 +115,7 @@ export default {
 
         const cargarVuelos = async (idDestino) => {
             try {
-                const res = await axios.get(`http://localhost:8000/api/vuelos/destino/${idDestino}`)
+                const res = await axios.get(`https://spaintrips-production.up.railway.app/api/vuelos/destino/${idDestino}`)
                 if (Array.isArray(res.data)) {
                     vuelos.value = res.data
                     vueloSeleccionado.value = res.data[0] || null
@@ -134,7 +134,7 @@ export default {
             mostrarModal.value = true
 
             try {
-                const res = await axios.get(`http://localhost:8000/api/vuelos/destino/${dest.ID_destino}`)
+                const res = await axios.get(`https://spaintrips-production.up.railway.app/api/vuelos/destino/${dest.ID_destino}`)
                 vuelos.value = res.data
             } catch {
                 vuelos.value = []
@@ -155,7 +155,7 @@ export default {
         //     if (!usuario.value || !destinoSeleccionado.value) return
 
         //     try {
-        //         await axios.post('http://localhost:8000/api/reservas', {
+        //         await axios.post('https://spaintrips-production.up.railway.app/api/reservas', {
         //             ID_usuario: usuario.value.ID_usuario,
         //             ID_destino: destinoSeleccionado.value.ID_destino,
         //             ID_vuelo: vueloSeleccionado.value?.ID_vuelo ?? null,
@@ -211,7 +211,7 @@ export default {
                     Nombre_hotel: destinoSeleccionado.value?.hotel || ''
                 };
 
-                const resConfirmacion = await axios.post('http://localhost:8000/api/reservas', payload);
+                const resConfirmacion = await axios.post('https://spaintrips-production.up.railway.app/api/reservas', payload);
 
                 cerrarModal();
                 await mostrarExito('¡Reserva confirmada con éxito!', resConfirmacion.data.mensaje);
@@ -235,7 +235,7 @@ export default {
 
         const refrescarUsuario = async () => {
             try {
-                const res = await axios.get(`http://localhost:8000/api/usuarios/${usuario.value.ID_usuario}`);
+                const res = await axios.get(`https://spaintrips-production.up.railway.app/api/usuarios/${usuario.value.ID_usuario}`);
                 usuario.value = res.data;
                 localStorage.setItem('usuario', JSON.stringify(usuario.value));
             } catch (e) {
@@ -265,7 +265,7 @@ export default {
         const cargarFavoritos = async () => {
             if (!usuario.value) return
             try {
-                const res = await axios.get(`http://localhost:8000/api/favoritos?usuario=${usuario.value.ID_usuario}`)
+                const res = await axios.get(`https://spaintrips-production.up.railway.app/api/favoritos?usuario=${usuario.value.ID_usuario}`)
                 favoritos.value = res.data.map(f => f.ID_destino)
             } catch (e) {
                 console.error('Error al cargar favoritos:', e)
@@ -286,7 +286,7 @@ export default {
 
             if (esFavorito(destino)) {
                 try {
-                    await axios.delete(`http://localhost:8000/api/favoritos/${idDestino}`, {
+                    await axios.delete(`https://spaintrips-production.up.railway.app/api/favoritos/${idDestino}`, {
                         data: { ID_usuario: usuario.value.ID_usuario }
                     })
                     favoritos.value = favoritos.value.filter(id => id !== idDestino)
@@ -295,7 +295,7 @@ export default {
                 }
             } else {
                 try {
-                    await axios.post(`http://localhost:8000/api/favoritos`, {
+                    await axios.post(`https://spaintrips-production.up.railway.app/api/favoritos`, {
                         ID_usuario: usuario.value.ID_usuario,
                         ID_destino: idDestino
                     })
