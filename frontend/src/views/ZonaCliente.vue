@@ -58,10 +58,10 @@ export default {
         },
         async obtenerPuntos() {
             try {
-                const userRes = await axios.get(`spaintrips-production.up.railway.app/api/usuarios/${this.userId}`);
+                const userRes = await axios.get(`http://localhost:8000/api/usuarios/${this.userId}`);
                 this.puntos = userRes.data.puntos || 0;
 
-                const recompensasRes = await axios.get(`spaintrips-production.up.railway.app/api/usuarios/${this.userId}/recompensas`);
+                const recompensasRes = await axios.get(`http://localhost:8000/api/usuarios/${this.userId}/recompensas`);
                 this.recompensas = Array.isArray(recompensasRes.data) ? recompensasRes.data : [];
             } catch (error) {
                 console.error("Error al obtener puntos o recompensas:", error);
@@ -71,7 +71,7 @@ export default {
         },
         async obtenerReservas() {
             try {
-                const res = await axios.get(`spaintrips-production.up.railway.app/api/mis-reservas/${this.userId}`);
+                const res = await axios.get(`http://localhost:8000/api/mis-reservas/${this.userId}`);
                 this.reservas = Array.isArray(res.data) ? res.data : [];
             } catch (error) {
                 console.error("Error al obtener reservas:", error);
@@ -80,7 +80,7 @@ export default {
         },
         async obtenerPerfil() {
             try {
-                const res = await axios.get(`spaintrips-production.up.railway.app/api/usuarios/${this.userId}`);
+                const res = await axios.get(`http://localhost:8000/api/usuarios/${this.userId}`);
                 this.usuario.nombre = res.data.Nombre;
                 this.usuario.correo = res.data.Correo;
             } catch (error) {
@@ -98,7 +98,7 @@ export default {
                     payload.password = this.nuevaContrasena;
                 }
 
-                await axios.put(`spaintrips-production.up.railway.app/api/usuarios/${this.userId}`, payload);
+                await axios.put(`http://localhost:8000/api/usuarios/${this.userId}`, payload);
                 this.mensajePerfil = "Perfil actualizado correctamente.";
                 this.tipoMensajePerfil = "success";
                 this.cerrarModal();
@@ -114,7 +114,7 @@ export default {
         },
         async cargarFavoritos() {
             try {
-                const res = await axios.get(`spaintrips-production.up.railway.app/api/favoritos?usuario=${this.userId}`);
+                const res = await axios.get(`http://localhost:8000/api/favoritos?usuario=${this.userId}`);
 
                 this.favoritos = Array.isArray(res.data) ? res.data : [];
             } catch (error) {
@@ -127,7 +127,7 @@ export default {
             document.body.classList.toggle('modo-accesible');
         },
         eliminarFavorito(id) {
-            axios.delete(`spaintrips-production.up.railway.app/api/favoritos/${id}`)
+            axios.delete(`http://localhost:8000/api/favoritos/${id}`)
                 .then(() => {
                     this.favoritos = this.favoritos.filter(f => f.ID_favorito !== id);
                 })
@@ -142,7 +142,7 @@ export default {
                     return;
                 }
 
-                const res = await axios.post('spaintrips-production.up.railway.app/api/recompensas', {
+                const res = await axios.post('http://localhost:8000/api/recompensas', {
                     ID_usuario: this.userId,
                     Puntos_necesarios: 300,
                     Descuento_aplicado: 20
@@ -157,7 +157,7 @@ export default {
         },
         async obtenerCatalogo() {
             try {
-                const res = await axios.get('spaintrips-production.up.railway.app/api/recompensas'); // devuelve solo recompensas sin usuario
+                const res = await axios.get('http://localhost:8000/api/recompensas'); // devuelve solo recompensas sin usuario
                 this.catalogo = Array.isArray(res.data) ? res.data : [];
             } catch (error) {
                 console.error("Error al obtener catálogo:", error);
@@ -166,7 +166,7 @@ export default {
         },
         async canjearRecompensaDesdeCatalogo(id) {
             try {
-                await axios.put(`spaintrips-production.up.railway.app/api/recompensas/${id}/canjear`);
+                await axios.put(`http://localhost:8000/api/recompensas/${id}/canjear`);
                 await this.obtenerPuntos();
                 await this.obtenerCatalogo();
             } catch (error) {
