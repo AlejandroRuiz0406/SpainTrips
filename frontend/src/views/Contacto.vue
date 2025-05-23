@@ -23,7 +23,7 @@ const enviarFormulario = async () => {
     }
 
     try {
-        await axios.post('https://spaintrips-production.up.railway.app/api/contacto', form.value);
+        await axios.post('http://localhost:8000/api/contacto', form.value);
         Swal.fire({
             icon: 'success',
             title: 'Mensaje enviado',

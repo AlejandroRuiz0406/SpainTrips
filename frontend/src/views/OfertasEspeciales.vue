@@ -135,7 +135,7 @@ const confirmarReserva = async () => {
 
 const refrescarUsuario = async () => {
     try {
-        const res = await axios.get(`https://spaintrips-production.up.railway.app/api/usuarios/${usuario.value.ID_usuario}`);
+        const res = await axios.get(`http://localhost:8000/api/usuarios/${usuario.value.ID_usuario}`);
         usuario.value = res.data;
         localStorage.setItem('usuario', JSON.stringify(usuario.value));
     } catch (e) {
@@ -167,7 +167,7 @@ const favoritos = ref([])
 const cargarFavoritos = async () => {
     if (!usuario.value) return
     try {
-        const res = await axios.get(`https://spaintrips-production.up.railway.app/api/favoritos?usuario=${usuario.value.ID_usuario}`)
+        const res = await axios.get(`http://localhost:8000/api/favoritos?usuario=${usuario.value.ID_usuario}`)
         favoritos.value = res.data.map(f => f.ID_destino)
     } catch (e) {
         console.error('Error al cargar favoritos:', e)
@@ -188,7 +188,7 @@ const toggleFavorito = async (destino) => {
 
     if (esFavorito(destino)) {
         try {
-            await axios.delete(`https://spaintrips-production.up.railway.app/api/favoritos/${idDestino}`, {
+            await axios.delete(`http://localhost:8000/api/favoritos/${idDestino}`, {
                 data: { ID_usuario: usuario.value.ID_usuario }
             })
             favoritos.value = favoritos.value.filter(id => id !== idDestino)
@@ -197,7 +197,7 @@ const toggleFavorito = async (destino) => {
         }
     } else {
         try {
-            await axios.post(`https://spaintrips-production.up.railway.app/api/favoritos`, {
+            await axios.post(`http://localhost:8000/api/favoritos`, {
                 ID_usuario: usuario.value.ID_usuario,
                 ID_destino: idDestino
             })
