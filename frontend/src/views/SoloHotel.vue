@@ -43,7 +43,7 @@ export default {
 
         const obtenerDestinos = async () => {
             try {
-                const res = await axios.get('http://localhost:8000/api/destinos')
+                const res = await api.get('/destinos')
                 destinos.value = res.data.filter(d =>
                     d.Tipo_experiencia.toLowerCase() !== 'vuelo + hotel'
                 )
@@ -109,7 +109,7 @@ export default {
 
         const refrescarUsuario = async () => {
             try {
-                const res = await axios.get(`http://localhost:8000/api/usuarios/${usuario.value.ID_usuario}`);
+                const res = await api.get(`http://localhost:8000/api/usuarios/${usuario.value.ID_usuario}`);
                 usuario.value = res.data;
                 localStorage.setItem('usuario', JSON.stringify(usuario.value));
             } catch (e) {
@@ -154,7 +154,7 @@ export default {
         const cargarFavoritos = async () => {
             if (!usuario.value) return
             try {
-                const res = await axios.get(`http://localhost:8000/api/favoritos?usuario=${usuario.value.ID_usuario}`)
+                const res = await api.get(`http://localhost:8000/api/favoritos?usuario=${usuario.value.ID_usuario}`)
                 favoritos.value = res.data.map(f => f.ID_destino)
             } catch (e) {
                 console.error('Error al cargar favoritos:', e)

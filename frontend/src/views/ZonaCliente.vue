@@ -58,10 +58,10 @@ export default {
         },
         async obtenerPuntos() {
             try {
-                const userRes = await axios.get(`http://localhost:8000/api/usuarios/${this.userId}`);
+                const userRes = await api.get(`http://localhost:8000/api/usuarios/${this.userId}`);
                 this.puntos = userRes.data.puntos || 0;
 
-                const recompensasRes = await axios.get(`http://localhost:8000/api/usuarios/${this.userId}/recompensas`);
+                const recompensasRes = await api.get(`http://localhost:8000/api/usuarios/${this.userId}/recompensas`);
                 this.recompensas = Array.isArray(recompensasRes.data) ? recompensasRes.data : [];
             } catch (error) {
                 console.error("Error al obtener puntos o recompensas:", error);
@@ -71,7 +71,7 @@ export default {
         },
         async obtenerReservas() {
             try {
-                const res = await axios.get(`http://localhost:8000/api/mis-reservas/${this.userId}`);
+                const res = await api.get(`http://localhost:8000/api/mis-reservas/${this.userId}`);
                 this.reservas = Array.isArray(res.data) ? res.data : [];
             } catch (error) {
                 console.error("Error al obtener reservas:", error);
@@ -80,7 +80,7 @@ export default {
         },
         async obtenerPerfil() {
             try {
-                const res = await axios.get(`http://localhost:8000/api/usuarios/${this.userId}`);
+                const res = await api.get(`http://localhost:8000/api/usuarios/${this.userId}`);
                 this.usuario.nombre = res.data.Nombre;
                 this.usuario.correo = res.data.Correo;
             } catch (error) {
@@ -114,7 +114,7 @@ export default {
         },
         async cargarFavoritos() {
             try {
-                const res = await axios.get(`http://localhost:8000/api/favoritos?usuario=${this.userId}`);
+                const res = await api.get(`http://localhost:8000/api/favoritos?usuario=${this.userId}`);
 
                 this.favoritos = Array.isArray(res.data) ? res.data : [];
             } catch (error) {
@@ -157,7 +157,7 @@ export default {
         },
         async obtenerCatalogo() {
             try {
-                const res = await axios.get('http://localhost:8000/api/recompensas'); // devuelve solo recompensas sin usuario
+                const res = await api.get('http://localhost:8000/api/recompensas'); // devuelve solo recompensas sin usuario
                 this.catalogo = Array.isArray(res.data) ? res.data : [];
             } catch (error) {
                 console.error("Error al obtener catálogo:", error);

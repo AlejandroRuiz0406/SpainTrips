@@ -18,7 +18,7 @@ export default {
         })
 
         const obtenerOpiniones = async () => {
-            const res = await axios.get('http://localhost:8000/api/opiniones')
+            const res = await api.get('http://localhost:8000/api/opiniones')
             console.log(res.data);
             opiniones.value = Array.isArray(res.data) ? res.data : []
         }
