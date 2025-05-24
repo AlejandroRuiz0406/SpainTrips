@@ -14,4 +14,4 @@ RUN composer install --no-dev --optimize-autoloader || true
 RUN cat /var/www/storage/logs/laravel.log || true
 RUN ls -la && cat composer.json || true
 
-CMD php artisan config:clear && php artisan cache:clear && php artisan route:clear && php artisan view:clear && php artisan serve --host=0.0.0.0 --port=8000
+CMD php artisan serve --host=0.0.0.0 --port=8000
