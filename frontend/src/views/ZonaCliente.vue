@@ -54,7 +54,7 @@ export default {
         cerrarSesion() {
             localStorage.removeItem("token");
             localStorage.removeItem("user_id");
-            this.$router.push("/login");
+            this.$router.push("/");
         },
         async obtenerPuntos() {
             try {
