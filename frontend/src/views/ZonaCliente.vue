@@ -52,9 +52,20 @@ export default {
             this.modalAbierto = null;
         },
         cerrarSesion() {
-            localStorage.removeItem("token");
-            localStorage.removeItem("user_id");
-            this.$router.push("/");
+            try {
+                await api.post('/logout', {}, {
+                    headers: {
+                        Authorization: `Bearer ${localStorage.getItem('token')}`
+                    }
+                })
+            } catch (error) {
+                console.warn('Error cerrando sesión (token puede haber expirado).')
+            }
+
+            localStorage.removeItem('usuario')
+            localStorage.removeItem('token')
+            usuario.value = null
+            router.push('/')
         },
         async obtenerPuntos() {
             try {
