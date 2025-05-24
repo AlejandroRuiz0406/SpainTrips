@@ -4,6 +4,19 @@ import router from './router'
 import 'bootstrap/dist/css/bootstrap.min.css'
 import * as bootstrap from 'bootstrap'
 import 'bootstrap'
+import { usuario } from './authBus'
+
+const saved = localStorage.getItem("usuario")
+if (saved) {
+  try {
+    usuario.value = JSON.parse(saved)
+  } catch {
+    localStorage.removeItem("usuario")
+    usuario.value = null
+  }
+} else {
+  usuario.value = null
+}
 
 const app = createApp(App)
 app.use(router)

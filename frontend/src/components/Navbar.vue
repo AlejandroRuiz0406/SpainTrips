@@ -90,7 +90,7 @@ export default {
                         <RouterLink class="nav-link" to="/admin">Zona Admin</RouterLink>
                     </li>
                     <li v-if="usuario" class="nav-item">
-                        <button class="btn btn-outline-light btn-sm ms-2" @click="cerrarSesion">Salir</button>
+                        <button v-if="usuario?.ID_usuario" class="btn btn-outline-light btn-sm ms-2" @click="cerrarSesion">Salir</button>
                     </li>
                 </ul>
             </div>
