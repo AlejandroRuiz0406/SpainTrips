@@ -6,7 +6,7 @@ return [
 
     'allowed_methods' => ['*'],
 
-    'allowed_origins' => ['*'], // Recomendado cambiar a ['https://tu-frontend.railway.app'] en producción
+    'allowed_origins' => ['*'],
 
     'allowed_origins_patterns' => [],
 
