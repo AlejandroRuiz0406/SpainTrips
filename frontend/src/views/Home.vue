@@ -44,7 +44,7 @@ export default {
         },
         async cargarDestacados() {
             try {
-                const res = await api.get('/destinos');
+                const res = await axios.get('http://localhost:8000/api/destinos');
                 this.destacados = res.data
                     .filter(d => d.Accesibilidad && ['si', 'sí'].includes(d.Accesibilidad.toLowerCase()))
                     .slice(0, 3);
@@ -122,10 +122,8 @@ export default {
             };
 
 
-            console.log("Payload enviado:", payload);
             try {
-                //await axios.post("http://localhost:8000/api/reservas", payload);
-                await api.post('/reservas', payload)
+                await axios.post("http://localhost:8000/api/reservas", payload);
                 this.cerrarModal();
                 await mostrarExito('Reserva realizada', 'Tu reserva fue registrada con éxito.');
 
@@ -140,9 +138,7 @@ export default {
             } catch (error) {
                 console.error("Error al guardar reserva:", error);
                 this.cerrarModal();
-                 console.error("Detalles:", error.response?.data);
-                await mostrarError('Error', error?.response?.data?.error || 'Error al realizar la reserva.');
-                //await mostrarError('Error', 'Error al realizar la reserva.');
+                await mostrarError('Error', 'Error al realizar la reserva.');
 
                 setTimeout(() => {
                     this.mensajeReserva = '';
@@ -151,7 +147,7 @@ export default {
         },
         async refrescarUsuario() {
             try {
-                const res = await api.get(`http://localhost:8000/api/usuarios/${usuario.value.ID_usuario}`);
+                const res = await axios.get(`http://localhost:8000/api/usuarios/${usuario.value.ID_usuario}`);
                 usuario.value = res.data;
                 localStorage.setItem('usuario', JSON.stringify(usuario.value));
             } catch (e) {
@@ -167,7 +163,7 @@ export default {
             }
 
             try {
-                const res = await api.get('/destinos');
+                const res = await axios.get('http://localhost:8000/api/destinos');
                 this.resultadosFiltrados = res.data.filter(dest =>
                     dest.Nombre?.toLowerCase().includes(texto) &&
                     (!this.filtroAccesible || (dest.Accesibilidad && ['si', 'sí'].includes(dest.Accesibilidad.toLowerCase())))
@@ -181,7 +177,7 @@ export default {
         async cargarFavoritos() {
             if (!usuario.value) return
             try {
-                const res = await api.get(`http://localhost:8000/api/favoritos?usuario=${usuario.value.ID_usuario}`)
+                const res = await axios.get(`http://localhost:8000/api/favoritos?usuario=${usuario.value.ID_usuario}`)
                 this.favoritos = res.data.map(f => f.ID_destino)
             } catch (e) {
                 console.error('Error al cargar favoritos:', e)

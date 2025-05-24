@@ -25,7 +25,7 @@ export default {
 
         const obtenerDestinos = async () => {
             try {
-                const res = await api.get('/destinos')
+                const res = await axios.get('http://localhost:8000/api/destinos')
                 destinos.value = res.data.filter(d =>
                     d.Tipo_experiencia.toLowerCase() === 'vuelo + hotel'
                 )
@@ -115,7 +115,7 @@ export default {
 
         const cargarVuelos = async (idDestino) => {
             try {
-                const res = await api.get(`http://localhost:8000/api/vuelos/destino/${idDestino}`)
+                const res = await axios.get(`http://localhost:8000/api/vuelos/destino/${idDestino}`)
                 if (Array.isArray(res.data)) {
                     vuelos.value = res.data
                     vueloSeleccionado.value = res.data[0] || null
@@ -134,7 +134,7 @@ export default {
             mostrarModal.value = true
 
             try {
-                const res = await api.get(`http://localhost:8000/api/vuelos/destino/${dest.ID_destino}`)
+                const res = await axios.get(`http://localhost:8000/api/vuelos/destino/${dest.ID_destino}`)
                 vuelos.value = res.data
             } catch {
                 vuelos.value = []
@@ -235,7 +235,7 @@ export default {
 
         const refrescarUsuario = async () => {
             try {
-                const res = await api.get(`http://localhost:8000/api/usuarios/${usuario.value.ID_usuario}`);
+                const res = await axios.get(`http://localhost:8000/api/usuarios/${usuario.value.ID_usuario}`);
                 usuario.value = res.data;
                 localStorage.setItem('usuario', JSON.stringify(usuario.value));
             } catch (e) {
@@ -265,7 +265,7 @@ export default {
         const cargarFavoritos = async () => {
             if (!usuario.value) return
             try {
-                const res = await api.get(`http://localhost:8000/api/favoritos?usuario=${usuario.value.ID_usuario}`)
+                const res = await axios.get(`http://localhost:8000/api/favoritos?usuario=${usuario.value.ID_usuario}`)
                 favoritos.value = res.data.map(f => f.ID_destino)
             } catch (e) {
                 console.error('Error al cargar favoritos:', e)
