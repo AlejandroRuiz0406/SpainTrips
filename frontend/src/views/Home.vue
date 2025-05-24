@@ -122,9 +122,9 @@ export default {
             };
 
 
+            console.log("Payload enviado:", payload);
             try {
                 //await axios.post("http://localhost:8000/api/reservas", payload);
-                console.log("Payload enviado:", payload);
                 await api.post('/reservas', payload)
                 this.cerrarModal();
                 await mostrarExito('Reserva realizada', 'Tu reserva fue registrada con éxito.');
@@ -140,6 +140,7 @@ export default {
             } catch (error) {
                 console.error("Error al guardar reserva:", error);
                 this.cerrarModal();
+                 console.error("Detalles:", error.response?.data);
                 await mostrarError('Error', error?.response?.data?.error || 'Error al realizar la reserva.');
                 //await mostrarError('Error', 'Error al realizar la reserva.');
 
