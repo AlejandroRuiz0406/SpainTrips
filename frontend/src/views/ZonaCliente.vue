@@ -1,6 +1,7 @@
 <script>
 import axios from 'axios';
 import { usuario } from '../authBus'
+import { useRouter } from 'vue-router'
 
 export default {
     name: "ZonaClienteModal",
@@ -22,7 +23,8 @@ export default {
             favoritos: [],
             mensajeFavoritos: '',
             recompensas: [],
-            mensajeRecompensas: ''
+            mensajeRecompensas: '',
+            router = useRouter()
         };
     },
     methods: {
