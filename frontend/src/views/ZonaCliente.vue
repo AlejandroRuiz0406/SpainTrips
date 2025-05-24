@@ -51,7 +51,7 @@ export default {
         cerrarModal() {
             this.modalAbierto = null;
         },
-        cerrarSesion() {
+        async cerrarSesion() {
             try {
                 await api.post('/logout', {}, {
                     headers: {
