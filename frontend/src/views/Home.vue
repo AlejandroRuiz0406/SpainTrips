@@ -1,5 +1,6 @@
 <script>
 import axios from 'axios';
+import api from '../services/api';
 import { ref } from 'vue'
 import { usuario } from '../authBus'
 import router from '../router'
@@ -122,7 +123,8 @@ export default {
 
 
             try {
-                await axios.post("http://localhost:8000/api/reservas", payload);
+                //await axios.post("http://localhost:8000/api/reservas", payload);
+                await api.post('/reservas', payload)
                 this.cerrarModal();
                 await mostrarExito('Reserva realizada', 'Tu reserva fue registrada con éxito.');
 
