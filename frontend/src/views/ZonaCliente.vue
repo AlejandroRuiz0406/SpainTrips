@@ -24,7 +24,6 @@ export default {
             mensajeFavoritos: '',
             recompensas: [],
             mensajeRecompensas: '',
-            router = useRouter()
         };
     },
     methods: {
@@ -67,7 +66,7 @@ export default {
             localStorage.removeItem('usuario')
             localStorage.removeItem('token')
             usuario.value = null
-            router.push('/')
+            this.$router.push('/')
         },
         async obtenerPuntos() {
             try {
