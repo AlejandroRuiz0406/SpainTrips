@@ -1,5 +1,6 @@
 <script>
 import axios from 'axios'
+import api from '../services/api'
 import { ref, onMounted, computed } from 'vue'
 import { usuario } from '../authBus'
 import { mostrarExito, mostrarError } from '../sweetalert2'
@@ -25,7 +26,7 @@ export default {
 
         const obtenerDestinos = async () => {
             try {
-                const res = await axios.get('http://localhost:8000/api/destinos')
+                const res = await api.get('/destinos')
                 destinos.value = res.data.filter(d =>
                     d.Tipo_experiencia.toLowerCase() === 'vuelo + hotel'
                 )
