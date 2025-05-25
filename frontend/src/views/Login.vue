@@ -22,20 +22,18 @@ export default {
                     Contraseña: contrasena.value
                 })
 
-                const { access_token, token_type, usuario, rol } = response.data
+                if (response.data && response.data.usuario) {
+                    const { access_token, token_type, usuario, rol } = response.data;
 
-                // Guardamos la sesión
-                localStorage.setItem('token', access_token)
-                localStorage.setItem('user_id', usuario.ID_usuario)
-                //localStorage.setItem('usuario', JSON.stringify({ nombre: usuario, rol }))
-                localStorage.setItem('usuario', JSON.stringify(usuario))
-                setUsuario(response.data.usuario)
+                    localStorage.setItem('token', access_token);
+                    localStorage.setItem('user_id', usuario.ID_usuario);
+                    localStorage.setItem('usuario', JSON.stringify(usuario));
+                    setUsuario(usuario);
 
-                // Redirigir según rol
-                if (rol === 'admin') {
-                    router.push('/')
+                    router.push('/');
                 } else {
-                    router.push('/')
+                    console.warn('No se recibió usuario. Respuesta:', response.data);
+                    error.value = 'Respuesta inesperada del servidor.';
                 }
 
             } catch (err) {
@@ -93,10 +91,11 @@ export default {
 
 <style scoped>
 a {
-  transition: color 0.2s ease;
+    transition: color 0.2s ease;
 }
+
 a:hover {
-  color: #003d7a;
-  text-decoration: underline;
+    color: #003d7a;
+    text-decoration: underline;
 }
 </style>
