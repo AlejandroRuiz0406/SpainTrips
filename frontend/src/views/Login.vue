@@ -17,7 +17,7 @@ export default {
             error.value = ''
 
             try {
-                const response = await axios.post('http://localhost:8000/api/login', {
+                const response = await axios.post('https://spaintrips-production.up.railway.app/api/login', {
                     Correo: correo.value,
                     Contraseña: contrasena.value
                 })
