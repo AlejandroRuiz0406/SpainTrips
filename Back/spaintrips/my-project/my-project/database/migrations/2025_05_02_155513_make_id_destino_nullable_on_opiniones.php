@@ -3,6 +3,7 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Facades\DB;
 
 return new class extends Migration
 {
@@ -11,9 +12,12 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::table('opiniones', function (Blueprint $table) {
-            $table->unsignedBigInteger('ID_destino')->nullable()->change();
-        });
+        // Schema::table('opiniones', function (Blueprint $table) {
+        //     $table->unsignedBigInteger('ID_destino')->nullable()->change();
+        // });
+        if (Schema::getConnection()->getDriverName() === 'mysql') {
+            DB::statement('ALTER TABLE opiniones MODIFY ID_destino INT NULL');
+        }
     }
 
     /**
@@ -21,6 +25,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        //
+        if (Schema::getConnection()->getDriverName() === 'mysql') {
+            DB::statement('ALTER TABLE opiniones MODIFY ID_destino INT NOT NULL');
+        }
     }
 };
