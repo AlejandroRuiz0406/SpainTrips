@@ -18,7 +18,7 @@ export default {
 
         const cerrarSesion = async () => {
             try {
-                await api.post('/logout', {}, {
+                await axios.post('http://localhost:8000/api/logout', {}, {
                     headers: {
                         Authorization: `Bearer ${localStorage.getItem('token')}`
                     }
