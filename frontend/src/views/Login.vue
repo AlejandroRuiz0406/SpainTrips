@@ -38,7 +38,7 @@ export default {
 
             } catch (err) {
                 //error.value = err.response?.data?.error || 'Error al iniciar sesión'
-                console.log(err.response?.data) // para ver el mensaje exacto en consola
+                console.log("Usuario: " + err.response?.data) // para ver el mensaje exacto en consola
                 error.value = err.response?.data?.error || 'Error al iniciar sesión'
             } finally {
                 cargando.value = false
