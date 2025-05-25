@@ -54,7 +54,7 @@ const getImagenDestino = (dest) => {
 onMounted(() => {
     bloques.forEach(async (bloque) => {
         try {
-            const res = await api.get(`/ofertas-especiales?perfil=${bloque.perfil}`)
+            const res = await axios.get(`http://localhost:8000/api/ofertas-especiales?perfil=${bloque.perfil}`)
             bloque.ofertas = res.data
         } catch (err) {
             console.error(`Error cargando ofertas para ${bloque.perfil}`, err)
@@ -69,7 +69,7 @@ const abrirModalReserva = async (dest) => {
     destinoSeleccionado.value = dest
     mostrarModal.value = true
     try {
-        const res = await api.get(`/vuelos/destino/${dest.ID_destino}`)
+        const res = await axios.get(`http://localhost:8000/api/vuelos/destino/${dest.ID_destino}`)
         vuelos.value = Array.isArray(res.data) ? res.data : []
         vueloSeleccionado.value = vuelos.value[0] || null
     } catch {
@@ -104,7 +104,7 @@ const resetFormularioReserva = () => {
 const confirmarReserva = async () => {
     if (!usuario.value || !destinoSeleccionado.value) return
     try {
-        await api.post('/reservas', {
+        await axios.post('/reservas', {
             ID_usuario: usuario.value.ID_usuario,
             ID_destino: destinoSeleccionado.value.ID_destino,
             ID_vuelo: vueloSeleccionado.value?.ID_vuelo ?? null,
