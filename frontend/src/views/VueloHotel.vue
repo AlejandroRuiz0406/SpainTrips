@@ -26,7 +26,7 @@ export default {
 
         const obtenerDestinos = async () => {
             try {
-                const res = await api.get('/destinos')
+                const res = await axios.get('http://localhost:8000/api/destinos')
                 destinos.value = res.data.filter(d =>
                     d.Tipo_experiencia.toLowerCase() === 'vuelo + hotel'
                 )
