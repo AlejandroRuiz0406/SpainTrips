@@ -17,7 +17,7 @@ export default {
             error.value = ''
 
             try {
-                const response = await api.post('/login', {
+                const response = await axios.post('http://localhost:8000/api/login', {
                     Correo: correo.value,
                     Contraseña: contrasena.value
                 })
