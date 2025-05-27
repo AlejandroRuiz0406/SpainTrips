@@ -1,6 +1,7 @@
 <script>
-import api from '../services/api'
+import axios from 'axios';
 import { ref } from 'vue'
+import api from '../services/api';
 import { useRouter } from 'vue-router'
 import { setUsuario } from '../authBus'
 
@@ -17,7 +18,7 @@ export default {
             error.value = ''
 
             try {
-                const response = await axios.post('https://spaintrips-production.up.railway.app/api/login', {
+                const response = await api.post('/login', {
                     Correo: correo.value,
                     Contraseña: contrasena.value
                 })
@@ -38,8 +39,9 @@ export default {
 
             } catch (err) {
                 //error.value = err.response?.data?.error || 'Error al iniciar sesión'
-                console.log('Error de login:', err.response?.status, err.response?.data)
-                // para ver el mensaje exacto en consola
+                console.log('Correo:', correo.value);
+                console.log('Contraseña:', contrasena.value);
+                console.log(err.response?.data)
                 error.value = err.response?.data?.error || 'Error al iniciar sesión'
             } finally {
                 cargando.value = false

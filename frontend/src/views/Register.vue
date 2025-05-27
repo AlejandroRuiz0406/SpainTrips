@@ -1,7 +1,8 @@
 <script setup>
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
-import api from '../services/api'
+import axios from 'axios';
+import { setUsuario } from '../authBus'
 
 const nombre = ref('')
 const correo = ref('')
@@ -27,6 +28,9 @@ const registrar = async () => {
             Contraseña: contrasena.value,
             Contraseña_confirmation: confirmar.value
         })
+        const { usuario } = response.data;
+        localStorage.setItem('usuario', JSON.stringify(usuario))
+        setUsuario(usuario)
 
         setTimeout(() => router.push('/login'), 2000)
         exito.value = '¡Bienvenido a SpainTrips!'

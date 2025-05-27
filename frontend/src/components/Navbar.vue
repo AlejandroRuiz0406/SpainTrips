@@ -16,6 +16,19 @@ export default {
         //     }
         // })
 
+        onMounted(() => {
+            const userData = localStorage.getItem('usuario')
+            if (userData && userData !== 'undefined') {
+                try {
+                    setUsuario(JSON.parse(userData))
+                } catch (e) {
+                    console.warn('Usuario corrupto en localStorage. Reiniciando...')
+                    localStorage.removeItem('usuario')
+                    setUsuario(null)
+                }
+            }
+        })
+
         const cerrarSesion = async () => {
             try {
                 await axios.post('http://localhost:8000/api/logout', {}, {
@@ -90,7 +103,8 @@ export default {
                         <RouterLink class="nav-link" to="/admin">Zona Admin</RouterLink>
                     </li>
                     <li v-if="usuario" class="nav-item">
-                        <button v-if="usuario?.ID_usuario" class="btn btn-outline-light btn-sm ms-2" @click="cerrarSesion">Salir</button>
+                        <button v-if="usuario?.ID_usuario" class="btn btn-outline-light btn-sm ms-2"
+                            @click="cerrarSesion">Salir</button>
                     </li>
                 </ul>
             </div>
