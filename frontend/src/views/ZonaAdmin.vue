@@ -290,11 +290,11 @@ const cerrarOpiniones = () => {
 
 const mostrarEstadisticas = ref(false)
 const stats = ref({
-    usuarios: 0,
-    destinos: 0,
-    reservas: 0,
-    opiniones: 0,
-    recompensas: 0
+    usuarios: '',
+    destinos: '',
+    reservas: '',
+    opiniones: '',
+    recompensas: ''
 })
 
 const toggleAccesibilidad = () => {
