@@ -1,7 +1,7 @@
 # Docs for the Azure Web Apps Deploy action: https://github.com/Azure/webapps-deploy
 # More GitHub Actions for Azure: https://github.com/Azure/actions
 
-name: Deploy Laravel + Vue app to Azure Web App
+name: Deploy Laravel + Vue + MySQL to Azure Web App
 
 on:
   push:
@@ -13,12 +13,12 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: 📥 Checkout repo
+    - name: Checkout code
       uses: actions/checkout@v3
 
-    - name: 🐳 Set up Docker
-      uses: docker/setup-buildx-action@v3
-
-    - name: 🔨 Build and run with Docker Compose
-      run: |
-        docker compose -f docker-compose.yml up -d --build
+    - name: Deploy to Azure Web App (Docker Compose)
+      uses: azure/webapps-deploy@v2
+      with:
+        app-name: spaintrips            
+        publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE }}
+        images: ''                      
