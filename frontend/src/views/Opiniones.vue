@@ -11,16 +11,29 @@ export default {
     setup() {
         const opiniones = ref([])
         const errorMensaje = ref('')
+        const cargando = ref(true)
 
         const nuevaOpinion = ref({
             Comentario: '',
             Puntuacion: 0
         })
 
+        // const obtenerOpiniones = async () => {
+        //     const res = await axios.get('http://localhost:8000/api/opiniones')
+        //     console.log(res.data);
+        //     opiniones.value = Array.isArray(res.data) ? res.data : []
+        // }
+
         const obtenerOpiniones = async () => {
-            const res = await axios.get('http://localhost:8000/api/opiniones')
-            console.log(res.data);
-            opiniones.value = Array.isArray(res.data) ? res.data : []
+            cargando.value = true
+            try {
+                const res = await axios.get('http://localhost:8000/api/opiniones')
+                opiniones.value = Array.isArray(res.data) ? res.data : []
+            } catch (e) {
+                console.error(e)
+            } finally {
+                cargando.value = false
+            }
         }
 
         const toggleAccesibilidad = () => {
@@ -83,7 +96,7 @@ export default {
             nuevaOpinion.value.Puntuacion = n
         }
 
-        return { opiniones, opinionesUnicas, nuevaOpinion, enviarOpinion, setValoracion, errorMensaje, toggleAccesibilidad }
+        return { opiniones, opinionesUnicas, nuevaOpinion, enviarOpinion, setValoracion, errorMensaje, toggleAccesibilidad, cargando }
     }
 }
 </script>
@@ -92,12 +105,36 @@ export default {
     <div class="container py-4">
         <div class="container py-4">
             <div v-if="opiniones.length > 0">
-                <h3 class="text-white mb-4">Opiniones de otros usuarios</h3>
-                <div class="d-flex justify-content-end mb-3">
-                    <button @click="toggleAccesibilidad" class="btn btn-outline-light bg-dark">
-                        ♿ Accesibilidad visual
-                    </button>
-                </div>
+                <h3 class="text-white text-center mb-4">Opiniones de otros usuarios</h3>
+                <!-- Formulario para enviar nueva opinión -->
+                <div class="card mx-auto" style="max-width: 600px">
+                    <div class="card-header">Deja tu opinión sobre la agencia</div>
+                    <div class="card-body">
+                        <form @submit.prevent="enviarOpinion">
+                            <div class="mb-3">
+                                <label for="comentario" class="form-label">Comentario</label>
+                                <textarea id="comentario" v-model="nuevaOpinion.Comentario" class="form-control"
+                                    rows="3" required></textarea>
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label">Valoración</label>
+                                <div>
+                                    <span v-for="n in 5" :key="n" @click="setValoracion(n)"
+                                        style="cursor: pointer; font-size: 1.4rem;">
+                                        {{ n <= nuevaOpinion.Puntuacion ? '★' : '☆' }} </span>
+                                </div>
+                            </div>
+
+                            <button type="submit" class="btn text-white" style="background-color: #D62828;">Enviar
+                                opinión</button>
+                        </form>
+
+                        <div v-if="errorMensaje" class="alert alert-warning mt-3" style="font-size: 0.95rem;">
+                            {{ errorMensaje }}
+                        </div>
+                    </div>
+                </div><br>
 
                 <div v-for="op in opiniones" :key="op.ID_opinion" class="card shadow-sm p-3 mb-3 border-0 rounded">
                     <div class="d-flex justify-content-between align-items-center mb-2">
@@ -115,38 +152,14 @@ export default {
                 </div>
             </div>
 
-            <div v-else class="mt-4 text-center text-white text-muted">
-                <p>No hay opiniones disponibles aún.</p>
-            </div>
-        </div>
-
-
-        <!-- Formulario para enviar nueva opinión -->
-        <div class="card mx-auto" style="max-width: 600px">
-            <div class="card-header">Deja tu opinión sobre la agencia</div>
-            <div class="card-body">
-                <form @submit.prevent="enviarOpinion">
-                    <div class="mb-3">
-                        <label for="comentario" class="form-label">Comentario</label>
-                        <textarea id="comentario" v-model="nuevaOpinion.Comentario" class="form-control" rows="3"
-                            required></textarea>
+            <div v-else>
+                <div v-if="cargando" class="text-center text-white mt-4">
+                    <div v-if="cargando" class="d-flex justify-content-center mt-5">
+                        <div class="custom-spinner"></div>
                     </div>
-
-                    <div class="mb-3">
-                        <label class="form-label">Valoración</label>
-                        <div>
-                            <span v-for="n in 5" :key="n" @click="setValoracion(n)"
-                                style="cursor: pointer; font-size: 1.4rem;">
-                                {{ n <= nuevaOpinion.Puntuacion ? '★' : '☆' }} </span>
-                        </div>
-                    </div>
-
-                    <button type="submit" class="btn text-white" style="background-color: #D62828;">Enviar
-                        opinión</button>
-                </form>
-
-                <div v-if="errorMensaje" class="alert alert-warning mt-3" style="font-size: 0.95rem;">
-                    {{ errorMensaje }}
+                </div>
+                <div v-else class="mt-4 text-center text-white text-muted">
+                    <p>No hay opiniones disponibles aún.</p>
                 </div>
             </div>
         </div>
@@ -166,5 +179,21 @@ export default {
 .btn {
     border-radius: 999px;
     font-weight: 600;
+}
+
+.custom-spinner {
+    width: 48px;
+    height: 48px;
+    border: 5px solid rgba(255, 255, 255, 0.2);
+    border-top-color: #ffffff;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin: auto;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
 }
 </style>

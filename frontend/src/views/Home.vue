@@ -30,7 +30,8 @@ export default {
             asistenciaMovilidad: false,
             comentarioAccesibilidad: '',
             nombreHotel: '',
-            favoritos: []
+            favoritos: [],
+            cargando: true
         }
     },
     mounted() {
@@ -51,6 +52,8 @@ export default {
                 this.resultadosFiltrados = this.destacados;
             } catch (e) {
                 console.error('Error al cargar destinos:', e);
+            } finally {
+                this.cargando = false;
             }
         },
         getImagenDestino(dest) {
@@ -230,21 +233,33 @@ export default {
 
 <template>
     <div class="container py-5">
-        <div class="d-flex justify-content-end mb-3">
-            <button @click="toggleAccesibilidad" class="btn btn-outline-light bg-dark">
-                ♿ Accesibilidad visual
-            </button>
-        </div>
+        <section class="py-5 mb-5" style="background-color: #0053A0; color: white;">
+            <div class="container d-flex flex-wrap justify-content-center align-items-center gap-4">
 
-        <section class="text-center py-5 mb-5" style="background-color: #0053A0; color: white;">
-            <div class="container">
-                <h1 class="display-4 fw-bold">Esto es <span style="color: #F7B801">SpainTrips</span></h1>
-                <p class="lead mt-3">La mejor forma de encontrar tus viajes soñados</p>
+                <img src="../../public/img/Flying Take Off GIF by Delta Air Lines.gif" alt="Animación de viaje" class="ms-4" style="width: 180px; border-radius: 12px;" />
+
+                <div class="text-center text-md-start" style="max-width: 600px;">
+                    <h1 class="display-4 fw-bold">
+                        Esto es <span style="color: #F7B801">SpainTrips</span>
+                    </h1>
+                    <p class="lead mt-3">
+                        Descubre experiencias únicas, reserva vuelos y hoteles en un solo lugar, accede a ofertas
+                        especiales
+                        y gestiona todo fácilmente desde tu cuenta.<br>
+                        ¡Explora, ahorra y viaja con confianza!
+                    </p>
+                </div>
+
             </div>
         </section>
 
         <section class="mb-5">
             <h2 class="text-center text-white mb-5">Viajes destacados</h2>
+            <div v-if="cargando" class="text-center text-white mt-4">
+                <div v-if="cargando" class="d-flex justify-content-center mt-5">
+                    <div class="custom-spinner"></div>
+                </div>
+            </div>
             <div v-if="mensajeReserva" :class="`alert alert-${tipoMensajeReserva} mt-4 text-center`">
                 {{ mensajeReserva }}
             </div>
@@ -343,7 +358,8 @@ export default {
                 </div>
             </div>
         </section>
-        <p v-else-if="busquedaRealizada && resultadosFiltrados.length === 0" class="text-center text-muted mt-4 bg-white">
+        <p v-else-if="busquedaRealizada && resultadosFiltrados.length === 0"
+            class="text-center text-muted mt-4 bg-white">
             No se encontraron resultados para tu búsqueda.
         </p>
 
@@ -548,6 +564,22 @@ export default {
     form .col-md-3,
     form .col-md-2 {
         width: 100%;
+    }
+}
+
+.custom-spinner {
+    width: 48px;
+    height: 48px;
+    border: 5px solid rgba(255, 255, 255, 0.2);
+    border-top-color: #ffffff;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin: auto;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
     }
 }
 </style>

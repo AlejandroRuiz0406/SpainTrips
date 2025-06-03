@@ -54,11 +54,6 @@ const toggleAccesibilidad = () => {
 <template>
     <div class="container py-4">
         <h2 class="text-center mb-4">Contacto</h2>
-        <div class="d-flex justify-content-end mb-3">
-            <button @click="toggleAccesibilidad" class="btn btn-outline-light bg-dark">
-                ♿ Accesibilidad visual
-            </button>
-        </div>
 
         <!-- Formulario de dudas -->
         <div class="card shadow-sm mb-4">

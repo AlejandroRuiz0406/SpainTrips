@@ -219,11 +219,6 @@ export default {
 <template>
     <div class="container mt-5">
         <h2 class="text-center mb-4">Zona Cliente</h2>
-        <div class="d-flex justify-content-end mb-3">
-            <button @click="toggleAccesibilidad" class="btn btn-outline-light bg-dark">
-                ♿ Accesibilidad visual
-            </button>
-        </div>
         <div v-if="mensajePerfil" class="mb-4">
             <div :class="['alert', tipoMensajePerfil === 'success' ? 'alert-success' : 'alert-danger']" role="alert">
                 {{ mensajePerfil }}
@@ -395,7 +390,8 @@ export default {
                         <ul class="list-group">
                             <li class="list-group-item" v-for="reserva in reservas" :key="reserva.ID_reserva">
                                 Reserva en <strong>{{ reserva.destino?.Nombre || 'Destino desconocido' }}</strong>
-                                - Estado: <span class="text-capitalize">{{ reserva.Estado }}</span>
+                                - <strong>Fecha:</strong> <span class="text-capitalize">{{ reserva.Fecha }}</span>
+                                - <strong>Estado:</strong> <span class="text-capitalize">{{ reserva.Estado }}</span>
                             </li>
                         </ul>
                     </div>

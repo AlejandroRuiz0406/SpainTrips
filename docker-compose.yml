@@ -1,23 +1,75 @@
+# version: '3.8'
+
+# services:
+#   backend:
+#     build:
+#       context: ./Back/spaintrips/my-project/my-project
+#     container_name: spaintrips-backend
+#     ports:
+#       - "8000:8000"  # Ajusta si Laravel escucha en otro puerto
+#     volumes:
+#       - ./Back/spaintrips/my-project/my-project:/var/www
+#     working_dir: /var/www
+#     command: php artisan serve --host=0.0.0.0 --port=8000
+#     depends_on:
+#       - mysql
+
+#   frontend:
+#     build:
+#       context: ./frontend
+#     container_name: spaintrips-frontend
+#     ports:
+#       - "80:80"
+#     depends_on:
+#       - backend
+
+#   mysql:
+#     image: mysql:8.0
+#     container_name: spaintrips-mysql
+#     restart: always
+#     environment:
+#       MYSQL_ROOT_PASSWORD: root
+#       MYSQL_DATABASE: spaintrips
+#       MYSQL_USER: user
+#       MYSQL_PASSWORD: password
+#     ports:
+#       - "3306:3306"
+#     volumes:
+#       - mysql_data:/var/lib/mysql
+
+# volumes:
+#   mysql_data:
+
 version: '3.8'
 
 services:
   backend:
-    build:
-      context: ./Back/spaintrips/my-project/my-project
     container_name: spaintrips-backend
+    build:
+      context: ./Back/spaintrips
+      dockerfile: Dockerfile
     ports:
-      - "8000:8000"  # Ajusta si Laravel escucha en otro puerto
-    volumes:
-      - ./Back/spaintrips/my-project/my-project:/var/www
+      - "8000:8000"
     working_dir: /var/www
-    command: php artisan serve --host=0.0.0.0 --port=8000
+    volumes:
+      - ./Back/spaintrips:/var/www
     depends_on:
       - mysql
+    environment:
+      APP_ENV: production
+      APP_KEY: ${APP_KEY}
+      DB_CONNECTION: mysql
+      DB_HOST: mysql
+      DB_PORT: 3306
+      DB_DATABASE: spaintrips
+      DB_USERNAME: user
+      DB_PASSWORD: password
 
   frontend:
+    container_name: spaintrips-frontend
     build:
       context: ./frontend
-    container_name: spaintrips-frontend
+      dockerfile: Dockerfile
     ports:
       - "80:80"
     depends_on:
@@ -32,10 +84,11 @@ services:
       MYSQL_DATABASE: spaintrips
       MYSQL_USER: user
       MYSQL_PASSWORD: password
-    ports:
-      - "3306:3306"
     volumes:
       - mysql_data:/var/lib/mysql
+    ports:
+      - "3306:3306"
 
 volumes:
   mysql_data:
+

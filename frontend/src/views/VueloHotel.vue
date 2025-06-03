@@ -16,6 +16,7 @@ export default {
         const comentarioAccesibilidad = ref('')
         const tipoAsistencia = ref('')
         const hotel = ref('')
+        const cargando = ref(true)
         const descuentoCanjeado = computed(() => usuario.value?.descuentoActivo || 0)
         //const usuario = ref(JSON.parse(localStorage.getItem('usuario') || '{}'))
 
@@ -32,6 +33,8 @@ export default {
                 )
             } catch (e) {
                 errorMensaje.value = 'Error al cargar destinos.'
+            } finally {
+                cargando.value = false
             }
         }
 
@@ -127,6 +130,8 @@ export default {
             } catch (e) {
                 vuelos.value = []
                 vueloSeleccionado.value = null
+            } finally {
+                cargando.value = false
             }
         }
 
@@ -198,7 +203,7 @@ export default {
                     ID_usuario: usuario.value.ID_usuario,
                     ID_destino: destinoSeleccionado.value.ID_destino,
                     ID_vuelo: vueloSeleccionado.value?.ID_vuelo ?? null,
-                     Estado: 'confirmada',
+                    Estado: 'confirmada',
                     adultos: reservaFormulario.value.adultos,
                     ninos: reservaFormulario.value.ninos,
                     habitaciones: reservaFormulario.value.habitaciones,
@@ -226,6 +231,7 @@ export default {
                 await mostrarError('Error', 'No se pudo completar la reserva.');
             } finally {
                 cerrarModal();
+                puntosUsar.value = 0;
             }
         };
 
@@ -335,7 +341,8 @@ export default {
             tipoAsistencia,
             toggleAccesibilidad,
             esFavorito,
-            toggleFavorito
+            toggleFavorito,
+            cargando
         }
     }
 }
@@ -344,11 +351,6 @@ export default {
 <template>
     <div class="container py-4">
         <h3 class="text-white mb-4">Vuelo + Hotel</h3>
-        <div class="d-flex justify-content-end mb-3">
-            <button @click="toggleAccesibilidad" class="btn btn-outline-light bg-dark">
-                ♿ Accesibilidad visual
-            </button>
-        </div>
 
         <!-- Mensajes -->
         <div v-if="errorMensaje" class="alert alert-danger">{{ errorMensaje }}</div>
@@ -357,6 +359,11 @@ export default {
         <!-- VIAJES POR TEMPORADA -->
         <section class="mb-5">
             <h4 class="text-white mb-3">Viajes por temporada</h4>
+            <div v-if="cargando" class="text-center text-white mt-4">
+                <div v-if="cargando" class="d-flex justify-content-center mt-5">
+                    <div class="custom-spinner"></div>
+                </div>
+            </div>
             <div class="row">
                 <div v-for="dest in destinosPorTemporada" :key="dest.ID_destino" class="col-md-6 col-lg-4 mb-4">
                     <div class="card h-100 shadow rounded-4 overflow-hidden border-0">
@@ -381,6 +388,15 @@ export default {
                                 class="text-success fw-semibold">
                                 ♿ Accesible
                             </p>
+                            <p v-if="usuario?.ID_usuario">
+                                Tienes {{ usuario.puntos }} puntos disponibles.
+                            </p>
+
+                            <div v-if="usuario?.ID_usuario">
+                                <label for="puntos_usar">¿Cuántos puntos deseas usar?</label>
+                                <input id="puntos_usar" type="number" v-model="puntosUsar" :max="usuario.puntos"
+                                    class="form-control mb-3" placeholder="Introduce puntos" />
+                            </div>
                             <button class="btn text-white w-100 fw-semibold rounded-pill"
                                 style="background-color: #D62828;" @click="abrirModalReserva(dest)">
                                 Reservar
@@ -394,6 +410,11 @@ export default {
         <!-- VIAJES POR EXPERIENCIA -->
         <section>
             <h4 class="text-white mb-3">Viajes por experiencia</h4>
+            <div v-if="cargando" class="text-center text-white mt-4">
+                <div v-if="cargando" class="d-flex justify-content-center mt-5">
+                    <div class="custom-spinner"></div>
+                </div>
+            </div>
             <div class="row">
                 <div v-for="dest in destinosPorExperiencia" :key="dest.ID_destino" class="col-md-6 col-lg-4 mb-4">
                     <div class="card h-100 shadow-sm border-0">
@@ -406,11 +427,15 @@ export default {
                             <p class="card-text mb-1"><strong>Tipo:</strong> {{ dest.Tipo_experiencia }}</p>
                             <p class="card-text mb-1"><strong>Accesible:</strong> {{ dest.Accesible ? 'Sí' : 'No' }}</p>
                             <p class="card-text mb-1"><strong>Precio:</strong> {{ dest.Precio }} €</p>
-                            <p>Tienes {{ usuario.puntos }} puntos disponibles.</p>
+                            <p v-if="usuario?.ID_usuario">
+                                Tienes {{ usuario.puntos }} puntos disponibles.
+                            </p>
 
-                            <label for="puntos_usar">¿Cuántos puntos deseas usar?</label>
-                            <input id="puntos_usar" type="number" v-model="puntosUsar" :max="usuario.puntos"
-                                class="form-control mb-3" placeholder="Introduce puntos" />
+                            <div v-if="usuario?.ID_usuario">
+                                <label for="puntos_usar">¿Cuántos puntos deseas usar?</label>
+                                <input id="puntos_usar" type="number" v-model="puntosUsar" :max="usuario.puntos"
+                                    class="form-control mb-3" placeholder="Introduce puntos" />
+                            </div>
                             <button @click="abrirModalReserva(dest)" class="btn text-white w-100"
                                 style="background-color: #D62828;">
                                 Reservar
@@ -640,6 +665,22 @@ export default {
     to {
         transform: translateY(0);
         opacity: 1;
+    }
+}
+
+.custom-spinner {
+    width: 48px;
+    height: 48px;
+    border: 5px solid rgba(255, 255, 255, 0.2);
+    border-top-color: #ffffff;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin: auto;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
     }
 }
 </style>

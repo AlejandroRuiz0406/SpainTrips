@@ -12,6 +12,7 @@ export default {
         const exitoMensaje = ref('')
         const destinoSeleccionado = ref(null)
         const mostrarModal = ref(false)
+        const cargando = ref(true)
 
         const today = new Date()
         const tomorrow = new Date()
@@ -49,6 +50,8 @@ export default {
                 )
             } catch (e) {
                 errorMensaje.value = 'Error al cargar destinos.'
+            }finally {
+                cargando.value = false 
             }
         }
 
@@ -221,7 +224,8 @@ export default {
             comentarioAccesibilidad,
             toggleAccesibilidad,
             esFavorito,
-            toggleFavorito
+            toggleFavorito,
+            cargando
         }
     }
 }
@@ -230,11 +234,6 @@ export default {
 <template>
     <div class="container py-4">
         <h3 class="text-white mb-4">Solo Hotel</h3>
-        <div class="d-flex justify-content-end mb-3">
-            <button @click="toggleAccesibilidad" class="btn btn-outline-light bg-dark">
-                ♿ Accesibilidad visual
-            </button>
-        </div>
 
         <div v-if="errorMensaje" class="alert alert-danger">{{ errorMensaje }}</div>
         <div v-if="exitoMensaje" class="alert alert-success">{{ exitoMensaje }}</div>
@@ -242,6 +241,11 @@ export default {
         <!-- POR TEMPORADA -->
         <section class="mb-5">
             <h4 class="text-white mb-3">Viajes por temporada</h4>
+            <div v-if="cargando" class="text-center text-white mt-4">
+                <div v-if="cargando" class="d-flex justify-content-center mt-5">
+                    <div class="custom-spinner"></div>
+                </div>
+            </div>
             <div class="row">
                 <div v-for="dest in destinosPorTemporada" :key="dest.ID_destino" class="col-md-6 col-lg-4 mb-4">
                     <div class="card h-100 shadow rounded-4 overflow-hidden border-0">
@@ -281,6 +285,11 @@ export default {
         <!-- POR EXPERIENCIA -->
         <section>
             <h4 class="text-white mb-3">Viajes por experiencia</h4>
+            <div v-if="cargando" class="text-center text-white mt-4">
+                <div v-if="cargando" class="d-flex justify-content-center mt-5">
+                    <div class="custom-spinner"></div>
+                </div>
+            </div>
             <div class="row">
                 <div v-for="dest in destinosPorExperiencia" :key="dest.ID_destino" class="col-md-6 col-lg-4 mb-4">
                     <div class="card h-100 shadow rounded-4 overflow-hidden border-0">
@@ -483,5 +492,21 @@ export default {
 .btn {
     border-radius: 999px;
     font-weight: 600;
+}
+
+.custom-spinner {
+    width: 48px;
+    height: 48px;
+    border: 5px solid rgba(255, 255, 255, 0.2);
+    border-top-color: #ffffff;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin: auto;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
 }
 </style>

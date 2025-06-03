@@ -8,6 +8,7 @@ const usuarios = ref([])
 const form = ref({})
 const formVisible = ref(false)
 const editando = ref(false)
+const cargandoStats = ref(false)
 
 const obtenerUsuarios = async () => {
     const res = await api.get('/usuarios')
@@ -302,22 +303,30 @@ const toggleAccesibilidad = () => {
 }
 
 const cargarEstadisticas = async () => {
-    const [u, d, r, o, rec] = await Promise.all([
-        api.get('/usuarios'),
-        api.get('/destinos'),
-        api.get('/reservas'),
-        api.get('/opiniones'),
-        api.get('/recompensas')
-    ])
+    cargandoStats.value = true
+    try {
+        const [u, d, r, o, rec] = await Promise.all([
+            api.get('/usuarios'),
+            api.get('/destinos'),
+            api.get('/reservas'),
+            api.get('/opiniones'),
+            api.get('/recompensas')
+        ])
 
-    stats.value = {
-        usuarios: u.data.length,
-        destinos: d.data.length,
-        reservas: r.data.length,
-        opiniones: o.data.length,
-        recompensas: rec.data.length
+        stats.value = {
+            usuarios: u.data.length,
+            destinos: d.data.length,
+            reservas: r.data.length,
+            opiniones: o.data.length,
+            recompensas: rec.data.length
+        }
+    } catch (error) {
+        console.error('Error al cargar estadísticas:', error)
+    } finally {
+        cargandoStats.value = false
     }
 }
+
 
 onMounted(() => {
     obtenerUsuarios()
@@ -331,11 +340,6 @@ onMounted(() => {
 <template>
     <div class="container my-5">
         <h1 class="text-center mb-4 fw-bold">Zona Administrador</h1>
-        <div class="d-flex justify-content-end mb-3">
-            <button @click="toggleAccesibilidad" class="btn btn-outline-light bg-dark">
-                ♿ Accesibilidad visual
-            </button>
-        </div>
 
         <div class="d-flex flex-column align-items-center gap-3">
             <div class="col">
@@ -612,33 +616,43 @@ onMounted(() => {
 
         <!-- MODAL ESTADISTICAS -->
         <div v-if="mostrarEstadisticas" class="modal-backdrop">
-            <div class="modal-content-custom">
+            <div class="modal-content-custom text-center">
                 <h3 class="mb-3">Estadísticas del sistema</h3>
-                <table class="table table-bordered">
-                    <tbody>
-                        <tr>
-                            <th>Usuarios registrados</th>
-                            <td>{{ stats.usuarios }}</td>
-                        </tr>
-                        <tr>
-                            <th>Destinos</th>
-                            <td>{{ stats.destinos }}</td>
-                        </tr>
-                        <tr>
-                            <th>Reservas</th>
-                            <td>{{ stats.reservas }}</td>
-                        </tr>
-                        <tr>
-                            <th>Opiniones</th>
-                            <td>{{ stats.opiniones }}</td>
-                        </tr>
-                        <tr>
-                            <th>Recompensas asignadas</th>
-                            <td>{{ stats.recompensas }}</td>
-                        </tr>
-                    </tbody>
-                </table>
-                <button class="btn btn-secondary mt-3" @click="mostrarEstadisticas = false">Cerrar</button>
+
+                <!-- SPINNER -->
+                <div v-if="cargandoStats" class="py-4">
+                    <div class="custom-spinner mx-auto"></div>
+                    <p class="mt-3 text-danger">Cargando estadísticas...</p>
+                </div>
+
+                <!-- CONTENIDO FINAL -->
+                <div v-else>
+                    <table class="table table-bordered">
+                        <tbody>
+                            <tr>
+                                <th>Usuarios registrados</th>
+                                <td>{{ stats.usuarios }}</td>
+                            </tr>
+                            <tr>
+                                <th>Destinos</th>
+                                <td>{{ stats.destinos }}</td>
+                            </tr>
+                            <tr>
+                                <th>Reservas</th>
+                                <td>{{ stats.reservas }}</td>
+                            </tr>
+                            <tr>
+                                <th>Opiniones</th>
+                                <td>{{ stats.opiniones }}</td>
+                            </tr>
+                            <tr>
+                                <th>Recompensas asignadas</th>
+                                <td>{{ stats.recompensas }}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <button class="btn btn-secondary mt-3" @click="mostrarEstadisticas = false">Cerrar</button>
+                </div>
             </div>
         </div>
     </div>
@@ -786,5 +800,21 @@ h3 {
         transform: translateY(0);
         opacity: 1;
     }
+}
+
+.custom-spinner {
+  width: 48px;
+  height: 48px;
+  border: 6px solid rgba(0, 0, 0, 0.1);
+  border-top-color: #D72638; /* rojo intenso */
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin: 0 auto;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
 }
 </style>

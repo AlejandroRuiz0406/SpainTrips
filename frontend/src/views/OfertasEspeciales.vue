@@ -216,11 +216,6 @@ const esOfertaEspecial = computed(() =>
 <template>
     <div class="container py-4">
         <h2 class="text-center text-white mb-4">Ofertas Especiales</h2>
-        <div class="d-flex justify-content-end mb-3">
-            <button @click="toggleAccesibilidad" class="btn btn-outline-light bg-dark">
-                ♿ Accesibilidad visual
-            </button>
-        </div>
 
         <!-- Mensajes de reserva -->
         <div v-if="errorMensaje" class="alert alert-danger">{{ errorMensaje }}</div>

@@ -46,7 +46,11 @@ export default {
             router.push('/')
         }
 
-        return { usuario, cerrarSesion }
+        const toggleAccesibilidad = () => {
+            document.body.classList.toggle('modo-accesible');
+        }
+
+        return { usuario, cerrarSesion, toggleAccesibilidad }
     }
 }
 </script>
@@ -85,29 +89,53 @@ export default {
                     </li>
                 </ul>
 
-                <ul class="navbar-nav mb-2 mb-lg-0">
-                    <li v-if="!usuario" class="nav-item">
+                <ul class="navbar-nav mb-2 mb-lg-0 d-flex align-items-center">
+                    <li class="nav-item me-3">
+                        <button @click="toggleAccesibilidad" class="btn btn-outline-light bg-dark">
+                            ♿ Accesibilidad visual
+                        </button>
+                    </li>
+
+                    <li v-if="!usuario" class="nav-item me-3">
                         <RouterLink class="nav-link" to="/login">Iniciar sesión</RouterLink>
                     </li>
-                    <li v-if="!usuario" class="nav-item">
+                    <li v-if="!usuario" class="nav-item me-3">
                         <RouterLink class="nav-link" to="/registro">Registrarse</RouterLink>
                     </li>
-                    <span v-if="usuario && usuario.puntos !== undefined" class="text-white fw-semibold me-3"
-                        style="background: rgba(0,0,0,0.2); padding: 6px 12px; border-radius: 8px; font-size: 0.9rem;">
-                        💠 {{ usuario.puntos }} SP
-                    </span>
-                    <li v-if="usuario && (usuario.rol === 'cliente' || usuario.rol === 'usuario')" class="nav-item">
+
+                    <li v-if="usuario && usuario.puntos !== undefined" class="nav-item me-3">
+                        <span class="text-white fw-semibold"
+                            style="background: rgba(0,0,0,0.2); padding: 6px 12px; border-radius: 8px; font-size: 0.9rem;">
+                            💠 {{ usuario.puntos }} SP
+                        </span>
+                    </li>
+
+                    <li v-if="usuario && (usuario.rol === 'cliente' || usuario.rol === 'usuario')"
+                        class="nav-item me-3">
                         <RouterLink class="nav-link" to="/cliente">Zona Cliente</RouterLink>
                     </li>
-                    <li v-if="usuario && usuario.rol === 'administrador'" class="nav-item">
+
+                    <li v-if="usuario && usuario.rol === 'administrador'" class="nav-item me-3">
                         <RouterLink class="nav-link" to="/admin">Zona Admin</RouterLink>
                     </li>
-                    <li v-if="usuario" class="nav-item">
-                        <button v-if="usuario?.ID_usuario" class="btn btn-outline-light btn-sm ms-2"
-                            @click="cerrarSesion">Salir</button>
+
+                    <li v-if="usuario?.ID_usuario" class="nav-item">
+                        <button class="btn btn-outline-light btn-sm" @click="cerrarSesion">Salir</button>
                     </li>
                 </ul>
             </div>
         </div>
     </nav>
 </template>
+
+<style>
+.btn {
+    border-radius: 999px;
+    font-weight: 600;
+}
+
+.router-link-active {
+    color: #FFD700 !important;
+    font-weight: bold !important;
+}
+</style>
